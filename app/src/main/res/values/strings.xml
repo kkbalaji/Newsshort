@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Inshort</string>
+    <string name="local_url">http://nristartupindia.site/fintech/</string>
+    <string name="live_url">http://nristartupindia.site/fintech/</string>
+    <string name="swipeup">Swipe Up</string>
+    <string name="words">60 words</string>
+    <string name="words_desc">Get up to date with latest news, politics, sports and more in 60 word summaries.</string>
+    <string name="personalised">Personalised</string>
+    <string name="personalised_desc">We analyse your browsing pattern and serve the most relevant stories.</string>
+    <string name="search">Search</string>
+    <string name="search_desc">Find stories or topics that are of interest to you through the new search feature.</string>
+    <string name="deviceId">1234567pknristartupindia</string>
+    <string name="no_internet">No Internet connection</string>
+
+
+</resources>
