@@ -8,20 +8,25 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.reactivestreams.Subscription;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import nri.startup.inshort.contractor.NewsContractor;
 import nri.startup.inshort.models.NewsModel;
 import nri.startup.inshort.networkprocess.WebService;
 import nri.startup.inshort.utils.Constant;
 import nri.startup.inshort.utils.SharedPreferenceUtils;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+
+import org.reactivestreams.Subscriber;
+
 
 /**
  * Created by Krushnakant Solanki on 17-02-2017.
@@ -50,9 +55,9 @@ public class NewsPresenter implements NewsContractor.INewsPresenter {
         mWebservice.getNews(deviceId, pageNo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<JsonObject, ArrayList<NewsModel>>() {
+                .map(new Function<JsonObject, ArrayList<NewsModel>>() {
                     @Override
-                    public ArrayList<NewsModel> call(JsonObject jsonObject) {
+                    public ArrayList<NewsModel> apply(JsonObject jsonObject) throws Exception {
                         ArrayList<NewsModel> newsList = new ArrayList<NewsModel>();
                         if (jsonObject != null) {
                             JsonArray newsarray = jsonObject.getAsJsonArray("data");
@@ -67,23 +72,12 @@ public class NewsPresenter implements NewsContractor.INewsPresenter {
                         }
                         return newsList;
                     }
-                })
-                .subscribe(new Subscriber<ArrayList<NewsModel>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("Error in Getting News", e != null ? e.getMessage() : "Error");
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<NewsModel> newsList) {
-                        newsView.setNewsData(newsList);
-                    }
-                });
+                }).subscribe(new Consumer<ArrayList<NewsModel>>() {
+                  @Override
+                  public void accept(ArrayList<NewsModel> newsList) throws Exception {
+                    newsView.setNewsData(newsList);
+            }
+        });
     }
 
 }

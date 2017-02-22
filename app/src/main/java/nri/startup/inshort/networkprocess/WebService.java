@@ -2,9 +2,10 @@ package nri.startup.inshort.networkprocess;
 
 import com.google.gson.JsonObject;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
+
 
 /**
  * Created by Krushnakant Solanki on 17-02-2017.

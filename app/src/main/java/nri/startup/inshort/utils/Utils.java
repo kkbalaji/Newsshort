@@ -39,10 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import nri.startup.inshort.R;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+
 
 
 public class Utils {
@@ -59,75 +56,8 @@ public class Utils {
         this.mContext = context;
     }
 
-    public static GlideDrawableImageViewTarget getGlideTarget(final Context mContext, final ImageView image) {
-        return new GlideDrawableImageViewTarget(image) {
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-//                super.onLoadFailed(e, errorDrawable);
-                loadImageRx(mContext, image, errorDrawable);
-            }
 
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-//                super.onResourceReady(resource, animation);
-                loadImageRx(mContext, image, resource);
-            }
-        };
-    }
 
-    public static SimpleTarget<GlideDrawable> getGlideSimpleTarget(final Context mContext, final ImageView image) {
-        return new SimpleTarget<GlideDrawable>() {
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                Utils.loadImageRx(mContext, image, errorDrawable);
-            }
-
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                Utils.loadImageRx(mContext, image, resource);
-            }
-        };
-    }
-
-    public static void loadImageRx(final Context mContext, final ImageView imageView, final Drawable drawable) {
-        Observable.create(new Observable.OnSubscribe<RoundedBitmapDrawable>() {
-            @Override
-            public void call(Subscriber<? super RoundedBitmapDrawable> subscriber) {
-                if (drawable == null) {
-                    subscriber.onError(new NullPointerException(".placeholder() method not implemented in Glide"));
-                }
-                try {
-                    Resources res = mContext.getResources();
-                    Bitmap src;
-                    if (drawable instanceof GlideDrawable)
-                        src = ((GlideBitmapDrawable) drawable).getBitmap();
-                    else
-                        src = ((BitmapDrawable) drawable).getBitmap();
-
-                    RoundedBitmapDrawable dr =
-                            RoundedBitmapDrawableFactory.create(res, src);
-                    dr.setCircular(true);
-//                    dr.setCornerRadius(Math.max(src.getWidth(), src.getHeight()) / radius);
-                    subscriber.onNext(dr);
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RoundedBitmapDrawable>() {
-                    @Override
-                    public void call(RoundedBitmapDrawable dr) {
-                        imageView.setImageDrawable(dr);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-//                        Timber.e(throwable, "Glide image loading error");
-                    }
-                });
-
-    }
 
 
     public boolean isNetworkAvailable(Context context) {
